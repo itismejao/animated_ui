@@ -1,6 +1,8 @@
 import 'package:animated_ui/screens/login/widgets/form_container.dart';
 import 'package:animated_ui/screens/login/widgets/sign_up_button.dart';
+import 'package:animated_ui/screens/login/widgets/stagger_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -9,9 +11,27 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin{
+
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    timeDilation = 1;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -24,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.zero,
           children: [
             Stack(
+              alignment: Alignment.bottomCenter,
               children: [
                 Column(
                   children: [
@@ -38,7 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const FormContainer(),
                     const SignUpButton()
                   ],
-                )
+                ),
+                StaggerAnimation(controller: _animationController)
               ],
             )
           ],
